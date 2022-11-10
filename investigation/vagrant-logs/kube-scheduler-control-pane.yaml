@@ -1,0 +1,72 @@
+Name:                 kube-scheduler-control-pane
+Namespace:            kube-system
+Priority:             2000001000
+Priority Class Name:  system-node-critical
+Node:                 control-pane/10.0.0.2
+Start Time:           Fri, 16 Dec 2022 21:53:30 +0000
+Labels:               component=kube-scheduler
+                      tier=control-plane
+Annotations:          kubernetes.io/config.hash: 4872e7f5d94521c86a80287609c37652
+                      kubernetes.io/config.mirror: 4872e7f5d94521c86a80287609c37652
+                      kubernetes.io/config.seen: 2022-12-16T21:53:30.223670911Z
+                      kubernetes.io/config.source: file
+                      seccomp.security.alpha.kubernetes.io/pod: runtime/default
+Status:               Running
+IP:                   10.0.0.2
+IPs:
+  IP:           10.0.0.2
+Controlled By:  Node/control-pane
+Containers:
+  kube-scheduler:
+    Container ID:  containerd://597a6024379f04f6ceb87e3b75cdc80502444fbfa496472d7a4ae7de1a0b74b1
+    Image:         k8s.gcr.io/kube-scheduler:v1.24.0
+    Image ID:      k8s.gcr.io/kube-scheduler@sha256:db842a7c431fd51db7e1911f6d1df27a7b6b6963ceda24852b654d2cd535b776
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      kube-scheduler
+      --authentication-kubeconfig=/etc/kubernetes/scheduler.conf
+      --authorization-kubeconfig=/etc/kubernetes/scheduler.conf
+      --bind-address=127.0.0.1
+      --kubeconfig=/etc/kubernetes/scheduler.conf
+      --leader-elect=true
+    State:          Running
+      Started:      Fri, 16 Dec 2022 21:57:03 +0000
+    Last State:     Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Fri, 16 Dec 2022 21:53:50 +0000
+      Finished:     Fri, 16 Dec 2022 21:56:43 +0000
+    Ready:          True
+    Restart Count:  2
+    Requests:
+      cpu:        100m
+    Liveness:     http-get https://127.0.0.1:10259/healthz delay=10s timeout=15s period=10s #success=1 #failure=8
+    Startup:      http-get https://127.0.0.1:10259/healthz delay=10s timeout=15s period=10s #success=1 #failure=24
+    Environment:  <none>
+    Mounts:
+      /etc/kubernetes/scheduler.conf from kubeconfig (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kubeconfig:
+    Type:          HostPath (bare host directory volume)
+    Path:          /etc/kubernetes/scheduler.conf
+    HostPathType:  FileOrCreate
+QoS Class:         Burstable
+Node-Selectors:    <none>
+Tolerations:       :NoExecute op=Exists
+Events:
+  Type     Reason          Age                   From     Message
+  ----     ------          ----                  ----     -------
+  Warning  Unhealthy       4m49s                 kubelet  Startup probe failed: Get "https://127.0.0.1:10259/healthz": dial tcp 127.0.0.1:10259: connect: connection refused
+  Normal   Killing         105s (x2 over 4m58s)  kubelet  Stopping container kube-scheduler
+  Normal   SandboxChanged  105s (x2 over 4m38s)  kubelet  Pod sandbox changed, it will be killed and re-created.
+  Warning  BackOff         98s (x5 over 105s)    kubelet  Back-off restarting failed container
+  Normal   Pulled          85s (x2 over 4m38s)   kubelet  Container image "k8s.gcr.io/kube-scheduler:v1.24.0" already present on machine
+  Normal   Created         85s (x2 over 4m38s)   kubelet  Created container kube-scheduler
+  Normal   Started         85s (x2 over 4m38s)   kubelet  Started container kube-scheduler

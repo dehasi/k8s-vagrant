@@ -1,0 +1,121 @@
+NAMESPACE     LAST SEEN   TYPE      REASON                    OBJECT                                          MESSAGE
+default       13m         Normal    Starting                  node/control-pane                               Starting kubelet.
+default       13m         Warning   InvalidDiskCapacity       node/control-pane                               invalid capacity 0 on image filesystem
+default       13m         Normal    NodeHasSufficientMemory   node/control-pane                               Node control-pane status is now: NodeHasSufficientMemory
+default       13m         Normal    NodeHasNoDiskPressure     node/control-pane                               Node control-pane status is now: NodeHasNoDiskPressure
+default       13m         Normal    NodeHasSufficientPID      node/control-pane                               Node control-pane status is now: NodeHasSufficientPID
+default       13m         Normal    NodeAllocatableEnforced   node/control-pane                               Updated Node Allocatable limit across pods
+default       13m         Normal    Starting                  node/control-pane                               Starting kubelet.
+default       13m         Warning   InvalidDiskCapacity       node/control-pane                               invalid capacity 0 on image filesystem
+default       13m         Normal    NodeHasSufficientMemory   node/control-pane                               Node control-pane status is now: NodeHasSufficientMemory
+default       13m         Normal    NodeHasNoDiskPressure     node/control-pane                               Node control-pane status is now: NodeHasNoDiskPressure
+default       13m         Normal    NodeHasSufficientPID      node/control-pane                               Node control-pane status is now: NodeHasSufficientPID
+default       13m         Normal    NodeAllocatableEnforced   node/control-pane                               Updated Node Allocatable limit across pods
+default       12m         Normal    RegisteredNode            node/control-pane                               Node control-pane event: Registered Node control-pane in Controller
+default       12m         Normal    Starting                  node/control-pane                               
+default       12m         Normal    Starting                  node/control-pane                               
+default       10m         Normal    RegisteredNode            node/control-pane                               Node control-pane event: Registered Node control-pane in Controller
+default       10m         Normal    Starting                  node/control-pane                               
+default       9m12s       Normal    Starting                  node/control-pane                               
+default       7m53s       Normal    RegisteredNode            node/control-pane                               Node control-pane event: Registered Node control-pane in Controller
+default       7m17s       Normal    Starting                  node/control-pane                               
+default       4m53s       Normal    Starting                  node/control-pane                               
+default       4m8s        Normal    RegisteredNode            node/control-pane                               Node control-pane event: Registered Node control-pane in Controller
+default       76s         Normal    NodeReady                 node/control-pane                               Node control-pane status is now: NodeReady
+default       40s         Normal    Starting                  node/control-pane                               
+kube-system   99s         Warning   FailedScheduling          pod/calico-kube-controllers-84c476996d-cffq6    0/1 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/not-ready: }. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system   4m8s        Normal    SuccessfulCreate          replicaset/calico-kube-controllers-84c476996d   Created pod: calico-kube-controllers-84c476996d-cffq6
+kube-system   4m8s        Normal    ScalingReplicaSet         deployment/calico-kube-controllers              Scaled up replica set calico-kube-controllers-84c476996d to 1
+kube-system   4m8s        Normal    NoPods                    poddisruptionbudget/calico-kube-controllers     No matching pods found
+kube-system   99s         Normal    Scheduled                 pod/calico-node-kl4n5                           Successfully assigned kube-system/calico-node-kl4n5 to control-pane
+kube-system   98s         Normal    Pulling                   pod/calico-node-kl4n5                           Pulling image "docker.io/calico/cni:v3.24.5"
+kube-system   90s         Normal    Pulled                    pod/calico-node-kl4n5                           Successfully pulled image "docker.io/calico/cni:v3.24.5" in 8.885817346s
+kube-system   89s         Normal    Created                   pod/calico-node-kl4n5                           Created container upgrade-ipam
+kube-system   89s         Normal    Started                   pod/calico-node-kl4n5                           Started container upgrade-ipam
+kube-system   88s         Normal    Pulled                    pod/calico-node-kl4n5                           Container image "docker.io/calico/cni:v3.24.5" already present on machine
+kube-system   88s         Normal    Created                   pod/calico-node-kl4n5                           Created container install-cni
+kube-system   88s         Normal    Started                   pod/calico-node-kl4n5                           Started container install-cni
+kube-system   86s         Normal    Pulling                   pod/calico-node-kl4n5                           Pulling image "docker.io/calico/node:v3.24.5"
+kube-system   77s         Normal    Pulled                    pod/calico-node-kl4n5                           Successfully pulled image "docker.io/calico/node:v3.24.5" in 9.069203497s
+kube-system   77s         Normal    Created                   pod/calico-node-kl4n5                           Created container mount-bpffs
+kube-system   77s         Normal    Started                   pod/calico-node-kl4n5                           Started container mount-bpffs
+kube-system   76s         Normal    Pulled                    pod/calico-node-kl4n5                           Container image "docker.io/calico/node:v3.24.5" already present on machine
+kube-system   76s         Normal    Created                   pod/calico-node-kl4n5                           Created container calico-node
+kube-system   76s         Normal    Started                   pod/calico-node-kl4n5                           Started container calico-node
+kube-system   75s         Warning   Unhealthy                 pod/calico-node-kl4n5                           Readiness probe failed: calico/node is not ready: BIRD is not ready: Error querying BIRD: unable to connect to BIRDv4 socket: dial unix /var/run/bird/bird.ctl: connect: no such file or directory
+kube-system   74s         Warning   Unhealthy                 pod/calico-node-kl4n5                           Readiness probe failed: calico/node is not ready: BIRD is not ready: Error querying BIRD: unable to connect to BIRDv4 socket: dial unix /var/run/calico/bird.ctl: connect: connection refused
+kube-system   4m8s        Normal    SuccessfulCreate          daemonset/calico-node                           Created pod: calico-node-kl4n5
+kube-system   12m         Warning   FailedScheduling          pod/coredns-6d4b75cb6d-6lwz7                    0/1 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/not-ready: }. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system   9m52s       Warning   FailedScheduling          pod/coredns-6d4b75cb6d-6lwz7                    0/1 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/not-ready: }. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system   8m3s        Warning   FailedScheduling          pod/coredns-6d4b75cb6d-6lwz7                    0/1 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/not-ready: }. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system   5m58s       Warning   FailedScheduling          pod/coredns-6d4b75cb6d-6lwz7                    0/1 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/not-ready: }. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system   99s         Warning   FailedScheduling          pod/coredns-6d4b75cb6d-6lwz7                    0/1 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/not-ready: }. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system   12m         Warning   FailedScheduling          pod/coredns-6d4b75cb6d-g88m8                    0/1 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/not-ready: }. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system   9m52s       Warning   FailedScheduling          pod/coredns-6d4b75cb6d-g88m8                    0/1 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/not-ready: }. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system   8m3s        Warning   FailedScheduling          pod/coredns-6d4b75cb6d-g88m8                    0/1 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/not-ready: }. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system   5m58s       Warning   FailedScheduling          pod/coredns-6d4b75cb6d-g88m8                    0/1 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/not-ready: }. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system   99s         Warning   FailedScheduling          pod/coredns-6d4b75cb6d-g88m8                    0/1 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/not-ready: }. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system   12m         Normal    SuccessfulCreate          replicaset/coredns-6d4b75cb6d                   Created pod: coredns-6d4b75cb6d-g88m8
+kube-system   12m         Normal    SuccessfulCreate          replicaset/coredns-6d4b75cb6d                   Created pod: coredns-6d4b75cb6d-6lwz7
+kube-system   12m         Normal    ScalingReplicaSet         deployment/coredns                              Scaled up replica set coredns-6d4b75cb6d to 2
+kube-system   13m         Warning   Unhealthy                 pod/etcd-control-pane                           Startup probe failed: Get "http://127.0.0.1:2381/health": dial tcp 127.0.0.1:2381: connect: connection refused
+kube-system   8m54s       Normal    SandboxChanged            pod/etcd-control-pane                           Pod sandbox changed, it will be killed and re-created.
+kube-system   8m34s       Normal    Pulled                    pod/etcd-control-pane                           Container image "k8s.gcr.io/etcd:3.5.3-0" already present on machine
+kube-system   8m34s       Normal    Created                   pod/etcd-control-pane                           Created container etcd
+kube-system   8m34s       Normal    Started                   pod/etcd-control-pane                           Started container etcd
+kube-system   10m         Warning   NodeNotReady              pod/etcd-control-pane                           Node is not ready
+kube-system   8m45s       Warning   BackOff                   pod/etcd-control-pane                           Back-off restarting failed container
+kube-system   7m53s       Warning   NodeNotReady              pod/etcd-control-pane                           Node is not ready
+kube-system   4m8s        Warning   NodeNotReady              pod/etcd-control-pane                           Node is not ready
+kube-system   7m16s       Normal    Killing                   pod/kube-apiserver-control-pane                 Stopping container kube-apiserver
+kube-system   13m         Warning   Unhealthy                 pod/kube-apiserver-control-pane                 Startup probe failed: HTTP probe failed with statuscode: 500
+kube-system   12m         Warning   Unhealthy                 pod/kube-apiserver-control-pane                 Startup probe failed: Get "https://10.0.0.2:6443/livez": dial tcp 10.0.0.2:6443: connect: connection refused
+kube-system   12m         Normal    SandboxChanged            pod/kube-apiserver-control-pane                 Pod sandbox changed, it will be killed and re-created.
+kube-system   12m         Normal    Pulled                    pod/kube-apiserver-control-pane                 Container image "k8s.gcr.io/kube-apiserver:v1.24.0" already present on machine
+kube-system   12m         Normal    Created                   pod/kube-apiserver-control-pane                 Created container kube-apiserver
+kube-system   12m         Normal    Started                   pod/kube-apiserver-control-pane                 Started container kube-apiserver
+kube-system   10m         Warning   NodeNotReady              pod/kube-apiserver-control-pane                 Node is not ready
+kube-system   8m32s       Warning   Unhealthy                 pod/kube-apiserver-control-pane                 Readiness probe failed: HTTP probe failed with statuscode: 500
+kube-system   8m34s       Warning   Unhealthy                 pod/kube-apiserver-control-pane                 Liveness probe failed: HTTP probe failed with statuscode: 500
+kube-system   7m53s       Warning   NodeNotReady              pod/kube-apiserver-control-pane                 Node is not ready
+kube-system   7m16s       Warning   Unhealthy                 pod/kube-apiserver-control-pane                 Liveness probe failed: Get "https://10.0.0.2:6443/livez": dial tcp 10.0.0.2:6443: connect: connection refused
+kube-system   7m13s       Warning   Unhealthy                 pod/kube-apiserver-control-pane                 Readiness probe failed: Get "https://10.0.0.2:6443/readyz": dial tcp 10.0.0.2:6443: connect: connection refused
+kube-system   4m8s        Warning   NodeNotReady              pod/kube-apiserver-control-pane                 Node is not ready
+kube-system   11m         Normal    Killing                   pod/kube-controller-manager-control-pane        Stopping container kube-controller-manager
+kube-system   13m         Warning   Unhealthy                 pod/kube-controller-manager-control-pane        Startup probe failed: Get "https://127.0.0.1:10257/healthz": dial tcp 127.0.0.1:10257: connect: connection refused
+kube-system   11m         Normal    SandboxChanged            pod/kube-controller-manager-control-pane        Pod sandbox changed, it will be killed and re-created.
+kube-system   8m22s       Normal    Pulled                    pod/kube-controller-manager-control-pane        Container image "k8s.gcr.io/kube-controller-manager:v1.24.0" already present on machine
+kube-system   8m22s       Normal    Created                   pod/kube-controller-manager-control-pane        Created container kube-controller-manager
+kube-system   8m22s       Normal    Started                   pod/kube-controller-manager-control-pane        Started container kube-controller-manager
+kube-system   6m44s       Warning   BackOff                   pod/kube-controller-manager-control-pane        Back-off restarting failed container
+kube-system   10m         Warning   NodeNotReady              pod/kube-controller-manager-control-pane        Node is not ready
+kube-system   7m53s       Warning   NodeNotReady              pod/kube-controller-manager-control-pane        Node is not ready
+kube-system   4m8s        Warning   NodeNotReady              pod/kube-controller-manager-control-pane        Node is not ready
+kube-system   13m         Normal    LeaderElection            lease/kube-controller-manager                   control-pane_9bcebf6e-1fa3-4c84-a7df-38bec63de94e became leader
+kube-system   12m         Normal    LeaderElection            lease/kube-controller-manager                   control-pane_40fb5041-3c7c-4095-8151-fd6799976f95 became leader
+kube-system   11m         Normal    LeaderElection            lease/kube-controller-manager                   control-pane_f78dc2f4-9631-4b47-8ed0-44ace7b02027 became leader
+kube-system   8m5s        Normal    LeaderElection            lease/kube-controller-manager                   control-pane_b7b6d6e1-7e72-4404-84fc-8f2a60b30c03 became leader
+kube-system   4m19s       Normal    LeaderElection            lease/kube-controller-manager                   control-pane_e06de27a-0fb3-4f1a-bc12-4bd8b31f4b64 became leader
+kube-system   12m         Normal    Scheduled                 pod/kube-proxy-fn8jk                            Successfully assigned kube-system/kube-proxy-fn8jk to control-pane
+kube-system   7m17s       Normal    Pulled                    pod/kube-proxy-fn8jk                            Container image "k8s.gcr.io/kube-proxy:v1.24.0" already present on machine
+kube-system   9m12s       Normal    Created                   pod/kube-proxy-fn8jk                            Created container kube-proxy
+kube-system   9m12s       Normal    Started                   pod/kube-proxy-fn8jk                            Started container kube-proxy
+kube-system   9m37s       Normal    Killing                   pod/kube-proxy-fn8jk                            Stopping container kube-proxy
+kube-system   9m37s       Normal    SandboxChanged            pod/kube-proxy-fn8jk                            Pod sandbox changed, it will be killed and re-created.
+kube-system   2m5s        Warning   BackOff                   pod/kube-proxy-fn8jk                            Back-off restarting failed container
+kube-system   4m8s        Warning   NodeNotReady              pod/kube-proxy-fn8jk                            Node is not ready
+kube-system   12m         Normal    SuccessfulCreate          daemonset/kube-proxy                            Created pod: kube-proxy-fn8jk
+kube-system   10m         Normal    Killing                   pod/kube-scheduler-control-pane                 Stopping container kube-scheduler
+kube-system   13m         Warning   Unhealthy                 pod/kube-scheduler-control-pane                 Startup probe failed: Get "https://127.0.0.1:10259/healthz": dial tcp 127.0.0.1:10259: connect: connection refused
+kube-system   10m         Normal    SandboxChanged            pod/kube-scheduler-control-pane                 Pod sandbox changed, it will be killed and re-created.
+kube-system   8m21s       Normal    Pulled                    pod/kube-scheduler-control-pane                 Container image "k8s.gcr.io/kube-scheduler:v1.24.0" already present on machine
+kube-system   8m21s       Normal    Created                   pod/kube-scheduler-control-pane                 Created container kube-scheduler
+kube-system   8m21s       Normal    Started                   pod/kube-scheduler-control-pane                 Started container kube-scheduler
+kube-system   10m         Warning   NodeNotReady              pod/kube-scheduler-control-pane                 Node is not ready
+kube-system   2m44s       Warning   BackOff                   pod/kube-scheduler-control-pane                 Back-off restarting failed container
+kube-system   7m53s       Warning   NodeNotReady              pod/kube-scheduler-control-pane                 Node is not ready
+kube-system   12m         Normal    LeaderElection            lease/kube-scheduler                            control-pane_15f545f0-0755-45df-ba94-9b8f1bcb5189 became leader
+kube-system   9m52s       Normal    LeaderElection            lease/kube-scheduler                            control-pane_9b42ccb7-aa06-4610-9ce6-095473c1ac07 became leader
+kube-system   8m4s        Normal    LeaderElection            lease/kube-scheduler                            control-pane_3e7cb2d8-9164-4740-abf2-e6e484daf0dd became leader
+kube-system   5m58s       Normal    LeaderElection            lease/kube-scheduler                            control-pane_a0e57361-1157-4d59-be61-b912018a3920 became leader
+kube-system   99s         Normal    LeaderElection            lease/kube-scheduler                            control-pane_f660c483-2262-41b2-9e32-be0b2f81e5b1 became leader

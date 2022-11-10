@@ -1,0 +1,73 @@
+= Kubernetes Cluster with Containerd on Vagrant
+
+Making 3 nodes cluster.
+
+== Prepare vagrant
+=== Network
+To be able to set IPs like `10.x.x.x` create a file `/etc/vbox/networks.conf`
+with content:
+
+./etc/vbox/networks.conf
+----
+include::networks.conf[]
+----
+=== Box
+
+Choose the suitable box. I ended with `bento/ubuntu-16.04`.
+Also tried
+
+* `hashicorp/precise64` - doesn't have overlay module;
+* `ubuntu/jammy64` - leads to `CrashLoopBackoff`.
+
+[source, ruby]
+----
+  config.vm.box = "bento/ubuntu-16.04"
+----
+
+== Install kubeadm
+
+All scripts that config boxes, and install `containerd` and `kubeadm` are in `/scipts` folder.
+
+== Control Pane
+
+`kubeadm` needs at least 1.7 Gb RAM. That's why `provider` was configured.
+[source, ruby]
+----
+config.vm.provider "virtualbox" do |vb|
+  vb.memory = 3*GB
+  vb.cpus = 2
+end
+----
+
+While initiating `kubeadm` master's IP should be used (`--apiserver-advertise-address`)
+otherwise some default network created by Vagrant will be used.
+
+.init control pane
+[source, shell]
+----
+include::init-kubernetes-control-pane.sh[]
+----
+
+`--pod-network-cidr` should have IPs which CNI plugin has.
+
+For `calico` default is 192.168.0.0/16 for `flannel` it is 10.244.0.0/16,
+not sure what needs to be done to vagrant for ips not clash,
+https://gist.github.com/walidshaari/02dfa17fffc9ac93cd47545d427ed76a[source].
+
+== Manual steps
+We need to init Container Network Interface (CNI) plugin and join workers.
+
+.manual steps
+[source, shell]
+----
+include::after-init-manual-steps.sh[]
+----
+
+.result
+----
+vagrant@control-pane:~$ kubectl get nodes
+NAME           STATUS   ROLES           AGE     VERSION
+control-pane   Ready    control-plane   9m12s   v1.24.0
+worker-1       Ready    worker          3m48s   v1.24.0
+worker-2       Ready    worker          3m18s   v1.24.0
+----

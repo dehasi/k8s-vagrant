@@ -1,0 +1,208 @@
+= Kube Controller Manager CrashLoopBackOff
+
+Some logs
+
+----
+ kubectl logs kube-apiserver-control-pane -n kube-system
+
+W1212 21:32:20.698327       1 clientconn.go:1331] [core] grpc: addrConn.createTransport failed to connect to {127.0.0.1:2379 127.0.0.1 <nil> 0 <nil>}. Err: connection error: desc = "transport: Error while dialing dial tcp 127.0.0.1:2379: connect: connection refused". Reconnecting...
+
+
+{"level":"warn","ts":"2022-12-12T21:32:29.234Z","logger":"etcd-client","caller":"v3/retry_interceptor.go:62","msg":"retrying of unary invoker failed","target":"etcd-endpoints://0xc0061fe000/127.0.0.1:2379","attempt":0,"error":"rpc error: code = DeadlineExceeded desc = latest balancer error: last connection error: connection error: desc = \"transport: Error while dialing dial tcp 127.0.0.1:2379: connect: connection refused\""}
+
+----
+
+
+----
+ fuser -k 2379/tcp
+----
+
+
+----
+vagrant@control-pane:~$  kubectl logs  kube-scheduler-control-pane -n kube-system
+I1212 21:33:44.044891       1 serving.go:348] Generated self-signed cert in-memory
+I1212 21:33:44.558908       1 server.go:147] "Starting Kubernetes Scheduler" version="v1.24.0"
+I1212 21:33:44.558983       1 server.go:149] "Golang settings" GOGC="" GOMAXPROCS="" GOTRACEBACK=""
+I1212 21:33:44.566214       1 requestheader_controller.go:169] Starting RequestHeaderAuthRequestController
+I1212 21:33:44.566533       1 shared_informer.go:255] Waiting for caches to sync for RequestHeaderAuthRequestController
+I1212 21:33:44.566699       1 configmap_cafile_content.go:202] "Starting controller" name="client-ca::kube-system::extension-apiserver-authentication::client-ca-file"
+I1212 21:33:44.566742       1 shared_informer.go:255] Waiting for caches to sync for client-ca::kube-system::extension-apiserver-authentication::client-ca-file
+I1212 21:33:44.566769       1 configmap_cafile_content.go:202] "Starting controller" name="client-ca::kube-system::extension-apiserver-authentication::requestheader-client-ca-file"
+I1212 21:33:44.566791       1 shared_informer.go:255] Waiting for caches to sync for client-ca::kube-system::extension-apiserver-authentication::requestheader-client-ca-file
+I1212 21:33:44.567043       1 secure_serving.go:210] Serving securely on 127.0.0.1:10259
+I1212 21:33:44.567580       1 tlsconfig.go:240] "Starting DynamicServingCertificateController"
+I1212 21:33:44.667832       1 leaderelection.go:248] attempting to acquire leader lease kube-system/kube-scheduler...
+I1212 21:33:44.668287       1 shared_informer.go:262] Caches are synced for client-ca::kube-system::extension-apiserver-authentication::requestheader-client-ca-file
+I1212 21:33:44.668498       1 shared_informer.go:262] Caches are synced for client-ca::kube-system::extension-apiserver-authentication::client-ca-file
+I1212 21:33:44.668517       1 shared_informer.go:262] Caches are synced for RequestHeaderAuthRequestController
+I1212 21:34:00.719742       1 leaderelection.go:258] successfully acquired lease kube-system/kube-scheduler
+I1212 21:34:00.987748       1 tlsconfig.go:255] "Shutting down DynamicServingCertificateController"
+I1212 21:34:00.987858       1 requestheader_controller.go:183] Shutting down RequestHeaderAuthRequestController
+I1212 21:34:00.987901       1 configmap_cafile_content.go:223] "Shutting down controller" name="client-ca::kube-system::extension-apiserver-authentication::client-ca-file"
+I1212 21:34:00.987921       1 configmap_cafile_content.go:223] "Shutting down controller" name="client-ca::kube-system::extension-apiserver-authentication::requestheader-client-ca-file"
+I1212 21:34:00.991580       1 secure_serving.go:255] Stopped listening on 127.0.0.1:10259
+I1212 21:34:00.997110       1 server.go:214] "Requested to terminate, exiting"
+vagrant@control-pane:~$ kubectl get pods --all-namespaces
+The connection to the server 10.0.0.2:6443 was refused - did you specify the right host or port?
+----
+
+== Try to add more memory
+Tried to give 5 gb. Let's see what `free -g` says
+
+----
+vagrant@control-pane:~$ free -h
+               total        used        free      shared  buff/cache   available
+Mem:           4.8Gi       622Mi       2.2Gi       1.0Mi       2.0Gi       3.9Gi
+Swap:             0B          0B          0B
+----
+
+Didn't help.
+
+.some logs
+----
+1739 ?        Ss     0:00 /lib/systemd/systemd-networkd
+   1762 ?        I      0:00 [kworker/0:4-events]
+   2396 ?        Ssl    0:00 /usr/libexec/packagekitd
+   2704 ?        Ssl    0:20 /usr/bin/containerd
+   4674 ?        Ssl    0:14 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config=/var/lib/kubelet/config.yaml --container-runtime=remote --container-runtime-endpoint=unix:///var/run/containerd/containerd.sock --pod-infra-container-image=k8s.gcr.io/pause:3.7
+   4768 ?        I      0:00 [kworker/1:4-events]
+   4769 ?        I      0:00 [kworker/1:5-events]
+   6078 ?        Sl     0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id d5d0c5c3a868125d16af7e43e211d936da3ba52650c9c263fc07d46633a52540 -address /run/containerd/containerd.sock
+   6098 ?        Ss     0:00 /pause
+   6783 ?        Ss     0:00 sshd: vagrant [priv]
+   6786 ?        Ss     0:00 /lib/systemd/systemd --user
+   6787 ?        S      0:00 (sd-pam)
+   6847 ?        S      0:00 sshd: vagrant@pts/0
+   6848 pts/0    Ss     0:00 -bash
+   6913 ?        I      0:00 [kworker/0:2-inode_switch_wbs]
+   6947 ?        I      0:00 [kworker/1:0-cgroup_destroy]
+   7115 ?        I      0:00 [kworker/u4:5-ext4-rsv-conversion]
+   7388 ?        I      0:00 [kworker/1:1-events]
+   8209 ?        Sl     0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id 6dc5ad554619a0baa91471aab01af5360e4b301a2d9fbe3d8e30aa9a74555c06 -address /run/containerd/containerd.sock
+   8229 ?        Ss     0:00 /pause
+   8539 ?        Sl     0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id c4e85d02c3ed3b62bc49e63c7b84a7ea2635c6f56d29efc8c34cf540b9a104f4 -address /run/containerd/containerd.sock
+   8559 ?        Ss     0:00 /pause
+   8653 ?        Sl     0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id 24a2a792e2d4c436a06ac710a398116a4c3694a6d89fada9267f2d8de84715bb -address /run/containerd/containerd.sock
+   8676 ?        Ss     0:00 /pause
+   8886 ?        Ssl    0:01 etcd --advertise-client-urls=https://10.0.0.2:2379 --cert-file=/etc/kubernetes/pki/etcd/server.crt --client-cert-auth=true --data-dir=/var/lib/etcd --experimental-initial-corrupt-check=true --initial-advertise-peer-urls=https://10.0.0.2:2380 --initial-cluster=control-pane=https://10.0.0.2:2380 --key-file=/etc/kubernetes/pki/etcd/server.key --listen-client-urls=https://127.0.0.1:2379,https://10.0.0.2:2379 --listen-metrics-urls=http://127.0.0.1:2381 --listen-peer-urls=https://10.0.0.2:2380 --name=control-pane --peer-cert-file=/etc/kubernetes/pki/etcd/peer.crt --peer-client-cert-auth=true --peer-key-file=/etc/kubernetes/pki/etcd/peer.key --peer-trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt --snapshot-count=10000 --trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
+   9031 ?        I      0:00 [kworker/1:2-mpt_poll_0]
+   9039 ?        Sl     0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id 42d03a0bb3db3b27343273f2a42f2ddc42f7096da5216cd6018632a24a1dd943 -address /run/containerd/containerd.sock
+   9062 ?        Ss     0:00 /pause
+   9098 ?        Ssl    0:00 /usr/local/bin/kube-proxy --config=/var/lib/kube-proxy/config.conf --hostname-override=control-pane
+   9143 ?        Ssl    0:01 kube-controller-manager --allocate-node-cidrs=true --authentication-kubeconfig=/etc/kubernetes/controller-manager.conf --authorization-kubeconfig=/etc/kubernetes/controller-manager.conf --bind-address=127.0.0.1 --client-ca-file=/etc/kubernetes/pki/ca.crt --cluster-cidr=192.168.0.0/16 --cluster-name=kubernetes --cluster-signing-cert-file=/etc/kubernetes/pki/ca.crt --cluster-signing-key-file=/etc/kubernetes/pki/ca.key --controllers=*,bootstrapsigner,tokencleaner --kubeconfig=/etc/kubernetes/controller-manager.conf --leader-elect=true --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt --root-ca-file=/etc/kubernetes/pki/ca.crt --service-account-private-key-file=/etc/kubernetes/pki/sa.key --service-cluster-ip-range=10.96.0.0/12 --use-service-account-credentials=true
+   9182 ?        Ssl    0:01 kube-scheduler --authentication-kubeconfig=/etc/kubernetes/scheduler.conf --authorization-kubeconfig=/etc/kubernetes/scheduler.conf --bind-address=127.0.0.1 --kubeconfig=/etc/kubernetes/scheduler.conf --leader-elect=true
+   9230 pts/0    R+     0:00 ps ax
+   9231 pts/0    S+     0:00 less
+----
+
+
+== Try using `11.*` IP instead of `10.*`.
+
+Update
+.network.conf
+----
+* 11.0.0.0/8 192.168.0.0/16
+* 2001::/64
+----
+
+Didn't help
+
+== Try to turn off swap at the beginning - (almost) no effect
+
+----
+# disable swap
+swapoff -a
+sed -i '/ swap / s/^/#/' /etc/fstab
+
+
+sudo mkdir -p /etc/modules-load.d/
+sudo cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
+overlay
+br_netfilter
+EOF
+----
+
+=== Copy logs
+
+----
+vagrant plugin install vagrant-scp
+
+vagrant scp control-pane:/home/vagrant .
+
+# copied to /k8s-vagrant/vagrant-logs/
+----
+
+Still getting `CrashLoopBackOff`, but feels like less frequently (can be false-impression)
+
+== Try applying network - no effect
+----
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+----
+
+Still getting `CrashLoopBackOff`.
+
+== Try to reboot
+
+----
+vagrant halt
+----
+
+Didn't help.
+
+== Try another vagrant box
+
+----
+  config.vm.box = ""bento/ubuntu-16.04""
+----
+
+*Helped*, no restarts for 1 hour.
+
+----
+vagrant@control-pane:~$ kubectl get pods --all-namespaces --output wide
+NAMESPACE     NAME                                       READY   STATUS    RESTARTS   AGE   IP                NODE           NOMINATED NODE   READINESS GATES
+kube-system   calico-kube-controllers-84c476996d-r7cth   1/1     Running   0          53m   192.168.172.193   control-pane   <none>           <none>
+kube-system   calico-node-v5fgw                          1/1     Running   0          53m   10.0.0.2          control-pane   <none>           <none>
+kube-system   coredns-6d4b75cb6d-ff8xz                   1/1     Running   0          62m   192.168.172.195   control-pane   <none>           <none>
+kube-system   coredns-6d4b75cb6d-jln98                   1/1     Running   0          62m   192.168.172.194   control-pane   <none>           <none>
+kube-system   etcd-control-pane                          1/1     Running   0          62m   10.0.0.2          control-pane   <none>           <none>
+kube-system   kube-apiserver-control-pane                1/1     Running   0          62m   10.0.0.2          control-pane   <none>           <none>
+kube-system   kube-controller-manager-control-pane       1/1     Running   0          62m   10.0.0.2          control-pane   <none>           <none>
+kube-system   kube-proxy-8sxlr                           1/1     Running   0          62m   10.0.0.2          control-pane   <none>           <none>
+kube-system   kube-scheduler-control-pane                1/1     Running   0          62m   10.0.0.2          control-pane   <none>           <none>
+----
+
+== Look at processes diff
+
+----
+ps aux > ~vagrant/processes_before
+
+sudo kubeadm init # params
+
+ps aux > ~vagrant/processes_after
+
+ vagrant scp control-pane:/home/vagrant/processes_before .
+ vagrant scp control-pane:/home/vagrant/processes_after .
+
+# copied to /k8s-vagrant/processes/
+----
+
+New processes
+
+----
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root     14903  0.0  0.1  10612  5432 ?        Sl   19:32   0:00 containerd-shim -namespace k8s.io -workdir /var/lib/containerd/io.containerd.runtime.v1.linux/k8s.io/49db366cf01edb5520ec96c0c41a0690a369d20cf044300cc483b8b17e98cade -address /run/containerd/containerd.sock -containerd-binary /usr/bin/containerd
+root     14904  0.0  0.1  10612  5080 ?        Sl   19:32   0:00 containerd-shim -namespace k8s.io -workdir /var/lib/containerd/io.containerd.runtime.v1.linux/k8s.io/9aefe6cef6f37eee66eee98b160c77e5c470b8462420cf3fa7fec90745e945d1 -address /run/containerd/containerd.sock -containerd-binary /usr/bin/containerd
+root     14928  0.0  0.1  10612  4876 ?        Sl   19:32   0:00 containerd-shim -namespace k8s.io -workdir /var/lib/containerd/io.containerd.runtime.v1.linux/k8s.io/ebeaaf63161ddd27b4924abac70070a893176289598b8dcac7e17bfe3dac5ba6 -address /run/containerd/containerd.sock -containerd-binary /usr/bin/containerd
+root     14932  0.0  0.1  10612  4924 ?        Sl   19:32   0:00 containerd-shim -namespace k8s.io -workdir /var/lib/containerd/io.containerd.runtime.v1.linux/k8s.io/72798113606b701a9a82bc30336af9c3d54c92ac7e219d33df54f93c5b1eb20e -address /run/containerd/containerd.sock -containerd-binary /usr/bin/containerd
+root     15121  0.0  0.1  10612  5048 ?        Sl   19:32   0:00 containerd-shim -namespace k8s.io -workdir /var/lib/containerd/io.containerd.runtime.v1.linux/k8s.io/270924e0e31caf2d2f79af17249a89f007de1394a387ec51e4065cfa1fece9fe -address /run/containerd/containerd.sock -containerd-binary /usr/bin/containerd
+root     15122  0.0  0.1  10612  4976 ?        Sl   19:32   0:00 containerd-shim -namespace k8s.io -workdir /var/lib/containerd/io.containerd.runtime.v1.linux/k8s.io/8386efd834221d3483459179c561296241000fc993f683e419cf1d3a8a80405e -address /run/containerd/containerd.sock -containerd-binary /usr/bin/containerd
+root     15146  0.0  0.1   9204  4512 ?        Sl   19:32   0:00 containerd-shim -namespace k8s.io -workdir /var/lib/containerd/io.containerd.runtime.v1.linux/k8s.io/1def8c392ad4979f3fcfb2e3f8dd4cdf934113cc0c3619cd07933976b3a80dea -address /run/containerd/containerd.sock -containerd-binary /usr/bin/containerd
+root     15204  0.0  0.1  10612  5156 ?        Sl   19:32   0:00 containerd-shim -namespace k8s.io -workdir /var/lib/containerd/io.containerd.runtime.v1.linux/k8s.io/6795e9419042a17ec3e5354642a411e0ab4b62c9ecd61ae54ef013ac4ac5cb8d -address /run/containerd/containerd.sock -containerd-binary /usr/bin/containerd
+root     15172 15.2  2.3 818412 72592 ?        Ssl  19:32   0:01 kube-controller-manager --allocate-node-cidrs=true --authentication-kubeconfig=/etc/kubernetes/controller-manager.conf --authorization-kubeconfig=/etc/kubernetes/controller-manager.conf --bind-address=127.0.0.1 --client-ca-file=/etc/kubernetes/pki/ca.crt --cluster-cidr=192.168.0.0/16 --cluster-name=kubernetes --cluster-signing-cert-file=/etc/kubernetes/pki/ca.crt --cluster-signing-key-file=/etc/kubernetes/pki/ca.key --controllers=*,bootstrapsigner,tokencleaner --kubeconfig=/etc/kubernetes/controller-manager.conf --leader-elect=true --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt --root-ca-file=/etc/kubernetes/pki/ca.crt --service-account-private-key-file=/etc/kubernetes/pki/sa.key --service-cluster-ip-range=10.96.0.0/12 --use-service-account-credentials=true
+root     15192 51.5 11.3 1104644 348408 ?      Ssl  19:32   0:03 kube-apiserver --advertise-address=10.0.0.2 --allow-privileged=true --authorization-mode=Node,RBAC --client-ca-file=/etc/kubernetes/pki/ca.crt --enable-admission-plugins=NodeRestriction --enable-bootstrap-token-auth=true --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key --etcd-servers=https://127.0.0.1:2379 --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt --proxy-client-key-file=/etc/kubernetes/pki/front-proxy-client.key --requestheader-allowed-names=front-proxy-client --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt --requestheader-extra-headers-prefix=X-Remote-Extra- --requestheader-group-headers=X-Remote-Group --requestheader-username-headers=X-Remote-User --secure-port=6443 --service-account-issuer=https://kubernetes.default.svc.cluster.local --service-account-key-file=/etc/kubernetes/pki/sa.pub --service-account-signing-key-file=/etc/kubernetes/pki/sa.key --service-cluster-ip-range=10.96.0.0/12 --tls-cert-file=/etc/kubernetes/pki/apiserver.crt --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
+root     15224 12.7  1.3 751360 43104 ?        Ssl  19:32   0:00 kube-scheduler --authentication-kubeconfig=/etc/kubernetes/scheduler.conf --authorization-kubeconfig=/etc/kubernetes/scheduler.conf --bind-address=127.0.0.1 --kubeconfig=/etc/kubernetes/scheduler.conf --leader-elect=true
+root     15232 11.8  1.4 11214264 43932 ?      Ssl  19:32   0:00 etcd --advertise-client-urls=https://10.0.0.2:2379 --cert-file=/etc/kubernetes/pki/etcd/server.crt --client-cert-auth=true --data-dir=/var/lib/etcd --experimental-initial-corrupt-check=true --initial-advertise-peer-urls=https://10.0.0.2:2380 --initial-cluster=control-pane=https://10.0.0.2:2380 --key-file=/etc/kubernetes/pki/etcd/server.key --listen-client-urls=https://127.0.0.1:2379,https://10.0.0.2:2379 --listen-metrics-urls=http://127.0.0.1:2381 --listen-peer-urls=https://10.0.0.2:2380 --name=control-pane --peer-cert-file=/etc/kubernetes/pki/etcd/peer.crt --peer-client-cert-auth=true --peer-key-file=/etc/kubernetes/pki/etcd/peer.key --peer-trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt --snapshot-count=10000 --trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
+root     15386  0.0  2.7 1131304 84708 ?       Ssl  19:32   0:00 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config=/var/lib/kubelet/config.yaml --container-runtime=remote --container-runtime-endpoint=unix:///var/run/containerd/containerd.sock --pod-infra-container-image=k8s.gcr.io/pause:3.7
+root     15443  0.0  0.0  13028   844 ?        S    19:32   0:00 iptables -w 5 -N KUBE-KUBELET-CANARY -t nat
+root     15483  0.0  0.1 132936  4824 ?        Rl   19:32   0:00 runc --root /run/containerd/runc/k8s.io --log /run/containerd/io.containerd.runtime.v1.linux/k8s.io/72798113606b701a9a82bc30336af9c3d54c92ac7e219d33df54f93c5b1eb20e/log.json --log-format json state 72798113606b701a9a82bc30336af9c3d54c92ac7e219d33df54f93c5b1eb20e
+----
